@@ -61,7 +61,7 @@ const httpinvoice = {
       }
 
       // 🔹 7️⃣ Extraer datos de la respuesta de Factus
-      const { cufe, url, qr, qr_image, number } = apiResponse.data.data.bill;
+      const { cufe, url, qr, qr_image, number, public_url } = apiResponse.data.data.bill;
       const {company} = apiResponse.data.data.company;
 
       // 🔹 8️⃣ Guardar la factura en MongoDB
@@ -78,6 +78,7 @@ const httpinvoice = {
         cufe,
         invoice_url: url,
         qr,
+        public_url,
         qr_image,
         number,
         company
