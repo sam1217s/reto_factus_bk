@@ -2,6 +2,7 @@ import Invoice from "../models/invoice.js";
 import axios from "axios";
 import Customer from "../models/customer.js";
 import Product from "../models/product.js";
+import invoice from "../models/invoice.js";
 
 const httpinvoice = {
   postInvoice: async (req, res) => {
@@ -25,12 +26,6 @@ const httpinvoice = {
       if (!existingCustomer) {
         return res.status(404).json({ error: "Cliente no encontrado" });
       }
-
-/*       // 🔹 4️⃣ Verificar si los productos existen
-      const existingProducts = await Product.find({ _id: { $in: products } });
-      if (existingProducts.length !== products.length) {
-        return res.status(404).json({ error: "Uno o más productos no existen" });
-      } */
 
       // 🔹 5️⃣ Crear objeto de la factura para enviar a Factus
       const dataInvoice = {
@@ -61,8 +56,17 @@ const httpinvoice = {
       }
 
       // 🔹 7️⃣ Extraer datos de la respuesta de Factus
-      const { cufe, url, qr, qr_image, number, public_url } = apiResponse.data.data.bill;
-      const {company} = apiResponse.data.data.company;
+      //const { cufe, url, qr, qr_image, number, public_url } = apiResponse.data.data.bill;
+      const factusCompany = {
+        invoice_id: apiResponse.data.invoice_id,
+        ...apiResponse.data.data.company
+      }
+
+      const factusData={
+        invoice_id:apiResponse.data.invoice_id,
+        ...apiResponse.data.data.bill
+      }
+    
 
       // 🔹 8️⃣ Guardar la factura en MongoDB
       const newInvoice = new Invoice({
@@ -75,13 +79,15 @@ const httpinvoice = {
         billing_period,
         customer: existingCustomer,
         products: products,
-        cufe,
+        factusData,
+        factusCompany,
+       /*  cufe,
         invoice_url: url,
         qr,
         public_url,
         qr_image,
         number,
-        company
+        company */
       });
 
       const savedInvoice = await newInvoice.save();

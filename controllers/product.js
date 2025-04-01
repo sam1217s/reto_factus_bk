@@ -18,6 +18,7 @@
                 withholding_taxes,
                 state,          
             })
+            console.log(newProduct) 
             await newProduct.save()
             res.json(newProduct)
         }catch(err){

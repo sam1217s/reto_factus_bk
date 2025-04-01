@@ -15,15 +15,16 @@ const InvoiceSchema = new mongoose.Schema({
   },
   customer: {type: mongoose.Schema.Types.ObjectId, ref: 'Clientes', required: true },
   products:{type:Array, required:true},
-  cufe: { type: String, unique: true },
-  invoice_url: {type: String},
-  qr: { type: String },
-  public_url: { type: String },
-  qr_image: { type: String },
-  number: { type: String },
-  company: { type: String },
+  factusData: {
+    type: mongoose.Schema.Types.Mixed,
+    default: {},
+  },
+  factusCompany: {
+    type: mongoose.Schema.Types.Mixed,
+    default: {},
+  },
 },
 { timestamps: true }
 );
 
-export default mongoose.model("Invoice", InvoiceSchema);
+export default mongoose.model("factus", InvoiceSchema);

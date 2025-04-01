@@ -19,6 +19,7 @@ const httpcustomer =  {
                 municipality_id,
                 state,
             })
+            console.log(newCustomer)
             await newCustomer.save()
             res.json(newCustomer)
         }catch(err){
