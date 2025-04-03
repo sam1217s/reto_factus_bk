@@ -6,9 +6,6 @@ import httpcustomer from  './routes/customer.js'
 import httpproduct from  './routes/product.js'
 import httpinvoice from  './routes/invoice.js'
 import cors from "cors";
-import nodemailer from "nodemailer";
-import PDFDocument from "pdfkit";
-import fs from "fs";
 
 const app = express();
 app.use(express.json());
