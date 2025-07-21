@@ -7,8 +7,14 @@ import httpproduct from './routes/product.js'
 import httpinvoice from './routes/invoice.js'
 import cors from "cors";
 
+import path from "path";
+import { fileURLToPath } from 'url';
+
 const app = express();
 
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 // ✅ CONFIGURACIÓN DE CORS MEJORADA
 app.use(cors({
   origin: ['http://localhost:5173', 'http://localhost:3000'], // Permitir frontend y testing
@@ -60,13 +66,19 @@ app.use((err, req, res, next) => {
   });
 });
 
-// ✅ RUTA 404
+// ✅ RUTA CATCH-ALL PARA SPA
 app.use('*', (req, res) => {
-  res.status(404).json({
-    error: 'Ruta no encontrada',
-    path: req.originalUrl,
-    code: 'NOT_FOUND'
-  });
+  // Si es una petición GET desde el navegador, servir el index.html
+  if (req.method === 'GET' && req.accepts('html')) {
+    res.sendFile(path.join(__dirname, 'public', 'index.html'));
+  } else {
+    // Para peticiones API, devolver 404 JSON
+    res.status(404).json({
+      error: 'Ruta no encontrada',
+      path: req.originalUrl,
+      code: 'NOT_FOUND'
+    });
+  }
 });
 
 // ✅ CONFIGURACIÓN DE MONGODB MEJORADA
@@ -114,4 +126,5 @@ process.on('uncaughtException', (err) => {
 process.on('unhandledRejection', (reason, promise) => {
   console.error('❌ Promesa rechazada no manejada en:', promise, 'razón:', reason);
 });
+
 
