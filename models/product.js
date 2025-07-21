@@ -1,3 +1,4 @@
+// models/product.js
 import mongoose from "mongoose";
 
 const productSchema = new mongoose.Schema({
@@ -7,6 +8,7 @@ const productSchema = new mongoose.Schema({
     discount_rate: { type: Number, required: true, default: 0 },
     price:{type:Number,required:true},
     tax_rate:{type:Number,required:true},
+    price_includes_tax: {type:Boolean, default:true}, // NUEVO CAMPO
     unit_measure_id:{type:Number,required:true},
     standard_code_id:{type:Number,required:true},
     is_excluded:{type:Number,required:true},
@@ -18,7 +20,6 @@ const productSchema = new mongoose.Schema({
           withholding_tax_rate: { type: Number },
         },
       ],
-
 });
 
 export default mongoose.model("Articulos",productSchema)
