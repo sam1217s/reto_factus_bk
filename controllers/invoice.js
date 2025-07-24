@@ -5,8 +5,8 @@ import axios from "axios";
 import Customer from "../models/customer.js";
 import Product from "../models/product.js";
 
-const httpinvoice = {
-  postInvoice: async (req, res) => {
+const invoiceController = {
+  createInvoice: async (req, res) => {
     const authHeader = req.headers.authorization;
     let token = "";
 
@@ -306,8 +306,7 @@ const httpinvoice = {
     }
   },
 
-  // ✅ MANTENER OTROS MÉTODOS IGUALES
-  getInvoice: async (req, res) => {
+  getAllInvoices: async (req, res) => {
     try {
       const { status } = req.query;
       const filter = status ? { status } : {};
@@ -352,4 +351,4 @@ function formatTimeForFactus(timeString) {
   return timeString;
 }
 
-export default httpinvoice;
+export default invoiceController;

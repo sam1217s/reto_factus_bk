@@ -1,18 +1,18 @@
 import { check } from "express-validator";
-import {Router} from "express";
-import httpproduct from "../controllers/product.js";
+import { Router } from "express";
+import productController from "../controllers/product.js";
 
 const router = Router();
 
-router.post("/", httpproduct.postProduct)
+router.post("/", productController.createProduct)
 
-router.get("/",httpproduct.getProduct)
+router.get("/", productController.getAllProducts)
 
-router.get("/:id",httpproduct.getProductById)
+router.get("/:id", productController.getProductById)
 
-router.put("/:id",httpproduct.updateProduct)
+router.put("/:id", productController.updateProduct)
 
-router.put("/inactive/:id",httpproduct.putModificarInactivo)
-router.put("/active/:id",httpproduct.putModificarActivado)
+router.put("/inactive/:id", productController.deactivateProduct)
+router.put("/active/:id", productController.activateProduct)
 
 export default router;

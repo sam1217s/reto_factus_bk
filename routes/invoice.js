@@ -1,4 +1,4 @@
-import httpinvoice from "../controllers/invoice.js";
+import invoiceController from "../controllers/invoice.js";
 import express from "express";
 import { check, validationResult } from "express-validator";
 import { Router } from "express";
@@ -58,13 +58,13 @@ router.post("/",
       .withMessage("payment_method_code debe ser texto"),
   ],
   handleValidationErrors,
-  httpinvoice.postInvoice
+  invoiceController.createInvoice
 );
 
 // ✅ RUTA PARA OBTENER FACTURAS
 router.get("/", 
   logRequests,
-  httpinvoice.getInvoice
+  invoiceController.getAllInvoices
 );
 
 // ✅ RUTA PARA ACTUALIZAR STATUS DE FACTURA
@@ -75,7 +75,7 @@ router.put("/:id",
       .withMessage("ID debe ser un ID válido de MongoDB"),
   ],
   handleValidationErrors,
-  httpinvoice.updateInvoiceStatus
+  invoiceController.updateInvoiceStatus
 );
 
 // ✅ RUTA PARA OBTENER FACTURAS POR STATUS (mantenida para compatibilidad)
@@ -84,7 +84,7 @@ router.get("/status/:status",
     req.query.status = req.params.status;
     next();
   }, 
-  httpinvoice.getInvoice
+  invoiceController.getAllInvoices
 );
 
 export default router;
