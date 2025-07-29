@@ -69,6 +69,7 @@ router.get("/",
 
 // ✅ RUTA PARA ACTUALIZAR STATUS DE FACTURA
 router.put("/:id", 
+  logRequests,
   [
     check("id")
       .isMongoId()
@@ -80,11 +81,24 @@ router.put("/:id",
 
 // ✅ RUTA PARA OBTENER FACTURAS POR STATUS (mantenida para compatibilidad)
 router.get("/status/:status", 
+  logRequests,
   (req, res, next) => {
     req.query.status = req.params.status;
     next();
   }, 
   invoiceController.getAllInvoices
+);
+
+// ✅ RUTA PARA OBTENER UNA FACTURA ESPECÍFICA
+router.get("/:id",
+  logRequests,
+  [
+    check("id")
+      .isMongoId()
+      .withMessage("ID debe ser un ID válido de MongoDB"),
+  ],
+  handleValidationErrors,
+  invoiceController.getInvoiceById  // ← Esta función ahora existe en el controlador
 );
 
 export default router;

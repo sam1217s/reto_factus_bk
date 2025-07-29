@@ -1,5 +1,3 @@
-// ===== controllers/invoice.js - 100% CONFORME A DOCUMENTACIÓN FACTUS =====
-
 import Invoice from "../models/invoice.js";
 import axios from "axios";
 import Customer from "../models/customer.js";
@@ -314,6 +312,30 @@ const invoiceController = {
       res.json(invoices);
     } catch (err) {
       res.status(500).json({ error: "Error al obtener facturas", details: err.message });
+    }
+  },
+
+  // ✅ FUNCIÓN FALTANTE AGREGADA
+  getInvoiceById: async (req, res) => {
+    try {
+      const { id } = req.params;
+      const invoice = await Invoice.findById(id).populate("customer");
+      
+      if (!invoice) {
+        return res.status(404).json({ 
+          error: "Factura no encontrada",
+          code: "INVOICE_NOT_FOUND" 
+        });
+      }
+      
+      res.json(invoice);
+    } catch (err) {
+      console.error('Error al obtener factura por ID:', err);
+      res.status(500).json({ 
+        error: "Error al obtener factura", 
+        details: err.message,
+        code: "GET_INVOICE_ERROR"
+      });
     }
   },
 

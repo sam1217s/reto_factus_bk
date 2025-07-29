@@ -1,21 +1,28 @@
 {
-  "name": "backapifactus",
+  "name": "flux-panel",
   "version": "1.0.0",
-  "description": "backend de factus ",
+  "description": "Backend de Factus",
+  "author": "Samuel Gomez",
+  "license": "ISC",
+  "type": "module",
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "node --watch index.js"
+    "dev": "node --watch index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [
+    "flux-panel",
+    "backend",
     "factus",
-    "factura",
-    "rutas"
+    "facturación",
+    "API REST",
+    "nodejs",
+    "express",
+    "sistema de facturas",
+    "panel administrativo",
+    "automatización"
   ],
-  "author": "Laura Ramirez",
-  "type": "module",
-  "license": "ISC",
   "dependencies": {
     "axios": "^1.7.9",
     "cors": "^2.8.5",

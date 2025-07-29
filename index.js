@@ -5,6 +5,7 @@ dotenv.config();
 import customerRoutes from './routes/customer.js'
 import productRoutes from './routes/product.js'
 import invoiceRoutes from './routes/invoice.js'
+import authRoutes from './routes/auth.js'  // ✅ NUEVA RUTA AGREGADA
 import cors from "cors";
 
 import path from "path";
@@ -12,18 +13,23 @@ import { fileURLToPath } from 'url';
 
 const app = express();
 
-
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+
 // ✅ CONFIGURACIÓN DE CORS MEJORADA
 app.use(cors({
-  origin: ['http://localhost:5173', 'http://localhost:3000'], // Permitir frontend y testing
-  methods: ['GET', 'POST', 'PUT', 'DELETE'],
-  credentials: true
+  origin: [
+    'http://localhost:5173', 
+    'http://localhost:3000', 
+    'https://reto-factus-api-samdev.onrender.com'
+  ],
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  credentials: true,
+  allowedHeaders: ['Content-Type', 'Authorization', 'Accept']
 }));
 
 // ✅ MIDDLEWARE MEJORADO
-app.use(express.json({ limit: '10mb' })); // Aumentar límite para facturas grandes
+app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true }));
 
 // ✅ MIDDLEWARE DE LOGGING
@@ -42,7 +48,9 @@ app.get('/health', (req, res) => {
   });
 });
 
-// ✅ RUTAS
+// ✅ RUTAS - ORDEN IMPORTANTE
+app.use("/api/auth", authRoutes);        // Rutas de autenticación (/api/auth/*)
+app.use("/api/oauth", authRoutes);       // ✅ NUEVA: Rutas OAuth2 (/api/oauth/*)
 app.use("/api/customer", customerRoutes);
 app.use("/api/product", productRoutes);
 app.use("/api/invoice", invoiceRoutes);
@@ -68,11 +76,9 @@ app.use((err, req, res, next) => {
 
 // ✅ RUTA CATCH-ALL PARA SPA
 app.use('*', (req, res) => {
-  // Si es una petición GET desde el navegador, servir el index.html
   if (req.method === 'GET' && req.accepts('html')) {
     res.sendFile(path.join(__dirname, 'public', 'index.html'));
   } else {
-    // Para peticiones API, devolver 404 JSON
     res.status(404).json({
       error: 'Ruta no encontrada',
       path: req.originalUrl,
@@ -90,11 +96,11 @@ const PORT = process.env.PORT || 3000;
 app.listen(PORT, async () => {
   console.log(`🚀 Servidor ejecutándose en puerto ${PORT}`);
   console.log(`🏥 Health check: http://localhost:${PORT}/health`);
+  console.log(`🔐 Auth endpoints: http://localhost:${PORT}/api/auth/*`);
+  console.log(`🔑 OAuth endpoints: http://localhost:${PORT}/api/oauth/*`);
   
   try {
     await mongoose.connect(process.env.CNX_MONGO, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
     });
     console.log("✅ Conectado a MongoDB");
     console.log(`📊 Base de datos: ${mongoose.connection.name}`);
